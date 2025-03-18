@@ -12,6 +12,8 @@ class Game{
         void selectOpt();
         int getSelectedOpt();
         //game methods
+        void gameLogic(); //manipulates data to get the current state of the game!
+        void update();
         void start();
         void credits();
 };
