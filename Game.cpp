@@ -17,7 +17,7 @@ Game::Game(Player player1, Player player2){
     this->turn=0;
 }
 void Game::selectOpt(){
-    cout<<"**[ Options ]**"<<endl;
+    cout<<"\n**[ Options ]**"<<endl;
     cout<<"1. shoot \n";
     cout<<"2. point \n";
     cout<<"\n Please choose wisely: ";
@@ -26,24 +26,27 @@ void Game::selectOpt(){
 int Game::getSelectedOpt(){
     return this->option;
 }
-void Game::gameLogic(){
-    if(this->getSelectedOpt()==1 && this->revolver.chamber[this->turn]==1){ //if selected 1 and in chamber is bullet!
-        cout<<"You have lost!"<<endl;
-        this->update();
-    }else if(this->getSelectedOpt()==2 && this->revolver.chamber[this->turn]==1){ //if point and shoot and is bullet!
-        cout<<"You have eliminated the other player!"<<endl;
-    }else if(this->getSelectedOpt()==2 && this->revolver.chamber[this->turn]!=1){ //if point and shoot but no bullet!
-        cout<<"You have missed, now point to yourself!"<<endl;
-        this->update();
-        if(this->revolver.chamber[this->turn]==1){ //shoot yourself!
-            cout<<"You have lost!"<<endl;
-        }else{
-            cout<<"You have missed, that was good luck!"<<endl; //miss!
-            this->update();
+void Game::gameLogic() {
+    if (this->getSelectedOpt() == 1) { // Player chooses to shoot
+        if (this->revolver.chamber[this->turn] == 1) { // Bullet is in the chamber
+            cout << "You have lost!" << endl;
+        } else { // No bullet in the chamber
+            cout << "You have survived! No bullet in the chamber." << endl;
         }
-    }else{ //if shoot but no bullet!
-        cout<<"You have missed!"<<endl;
-        this->update();
+    } else if (this->getSelectedOpt() == 2) { // Player chooses to point
+        if (this->revolver.chamber[this->turn] == 1) { // Bullet is in the chamber
+            cout << "You have eliminated the other player!" << endl;
+        } else { // No bullet in the chamber
+            cout << "You have missed, now point to yourself!" << endl;
+            this->update();
+            if (this->revolver.chamber[this->turn] == 1) { // Bullet is now in the chamber
+                cout << "You have lost!" << endl;
+            } else {
+                cout << "You have survived! No bullet in the chamber." << endl;
+            }
+        }
+    } else {
+        cout << "Invalid option selected. Please choose 1 (shoot) or 2 (point)." << endl;
     }
 }
 void Game::update(){
@@ -54,21 +57,43 @@ void Game::update(){
         this->turn = 0;
     }
 }
-void Game::start(){
-    cout<<"\n***--- Game Started ---***\n"<<endl;
+void Game::start() {
+    cout << "\n***--- Game Started ---***\n" << endl;
 
-    cout<<"*** Players: "<<endl;
-    cout<<this->player1.getName()<<"\n";
-    cout<<this->player2.getName()<<"\n";
+    cout << "*** Players: " << endl;
+    cout << this->player1.getName() << "\n";
+    cout << this->player2.getName() << "\n";
 
     int b;
-    cout<<"Please enter the total of bullets in the chamber: (recommended: 1)"<<"\n";
-    cin>>b;
+    cout << "Please enter the total number of bullets in the chamber: (recommended: 1)" << "\n";
+    cin >> b;
     this->revolver.loadGun(b);
     this->revolver.gunShuffle();
-    this->revolver.revealGun();
-    cout<<"It's "<<this->player1.getName()<<"'s turn!"<<endl;
-    this->selectOpt();
+    int maxTurns = 6; // Maximum number of turns before the game ends
+    int currentTurn = 0;
 
-    this->gameLogic();
+    while (currentTurn < maxTurns) {
+        cout << "\nTurn " << currentTurn + 1 << " of " << maxTurns << endl;
+
+        cout << "It's " << this->player1.getName() << "'s turn!" << endl;
+        this->selectOpt();
+        this->gameLogic();
+        if (this->revolver.chamber[this->turn] == 1) { // Check if the game ends
+            cout << this->player1.getName() << " has lost!" << endl;
+            break;
+        }
+
+        cout << "It's " << this->player2.getName() << "'s turn!" << endl;
+        this->selectOpt();
+        this->gameLogic();
+        if (this->revolver.chamber[this->turn] == 1) { // Check if the game ends
+            cout << this->player2.getName() << " has lost!" << endl;
+            break;
+        }
+
+        currentTurn++;
+    }
+    if (currentTurn == maxTurns) {
+        cout << "The game has ended in a draw after " << maxTurns << " turns!" << endl;
+    }
 }

@@ -32,7 +32,6 @@ void Gun::unloadGun(){
 void Gun::gunShuffle(){
     srand (time(NULL));
     this->pos_chamber=rand() % 6+1;
-    cout<<to_string(this->pos_chamber)<<endl;
     this->chamber[pos_chamber-1] = 1;
 }
 void Gun::gunShoot(){
