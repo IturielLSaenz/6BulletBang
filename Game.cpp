@@ -20,12 +20,39 @@ void Game::selectOpt(){
     cout<<"**[ Options ]**"<<endl;
     cout<<"1. shoot \n";
     cout<<"2. point \n";
-    cout<<"3. bet \n";
     cout<<"\n Please choose wisely: ";
     cin>>this->option;
 }
 int Game::getSelectedOpt(){
     return this->option;
+}
+void Game::gameLogic(){
+    if(this->getSelectedOpt()==1 && this->revolver.chamber[this->turn]==1){ //if selected 1 and in chamber is bullet!
+        cout<<"You have lost!"<<endl;
+        this->update();
+    }else if(this->getSelectedOpt()==2 && this->revolver.chamber[this->turn]==1){ //if point and shoot and is bullet!
+        cout<<"You have eliminated the other player!"<<endl;
+    }else if(this->getSelectedOpt()==2 && this->revolver.chamber[this->turn]!=1){ //if point and shoot but no bullet!
+        cout<<"You have missed, now point to yourself!"<<endl;
+        this->update();
+        if(this->revolver.chamber[this->turn]==1){ //shoot yourself!
+            cout<<"You have lost!"<<endl;
+        }else{
+            cout<<"You have missed, that was good luck!"<<endl; //miss!
+            this->update();
+        }
+    }else{ //if shoot but no bullet!
+        cout<<"You have missed!"<<endl;
+        this->update();
+    }
+}
+void Game::update(){
+    if (this->turn < rounds - 1) {
+        this->turn++;
+    } else {
+        cout << "End of chamber reached. Resetting turn." << endl;
+        this->turn = 0;
+    }
 }
 void Game::start(){
     cout<<"\n***--- Game Started ---***\n"<<endl;
@@ -43,7 +70,5 @@ void Game::start(){
     cout<<"It's "<<this->player1.getName()<<"'s turn!"<<endl;
     this->selectOpt();
 
-    if(this->getSelectedOpt()==1){
-
-    }
+    this->gameLogic();
 }
