@@ -43,15 +43,17 @@ This is a fun side project to improve bit by bit — one bullet at a time 😎
 🗂️ Project Structure
 ```bash
 6BulletBang/
-├── src/               # C++ source files
-│   ├── main.cpp
-│   └── ...            # Game logic files
-├── include/           # Header files (if any)
-├── assets/            # ASCII art, sound files, or text data
-├── build/             # Compiled binaries (ignored by git)
-├── README.md          # This file!
-└── .gitignore         # Git ignore rules
+├── Game.cpp
+├── Game.h
+├── Gun.cpp
+├── Gun.h
+├── Player.cpp
+├── Player.h
+├── README.md
+├── main
+└── main.cpp
 ```
+
 ## 🛠️ Installation
 ### 🧾 Prerequisites
 You'll need:
@@ -69,7 +71,7 @@ cd 6BulletBang
 ```
 ### ⚙️ Build the project
 ```bash
-g++ -o 6bulletbang src/*.cpp
+g++ -o 6bulletbang *.cpp
 ```
 
 ▶️ Run the game
